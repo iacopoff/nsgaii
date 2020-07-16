@@ -3,7 +3,7 @@ import numpy as np
 from numpy.random import random,randint,uniform,permutation
 from utils import fastSort,crowdDist
 from db import MultiGridWriter
-
+import pandas as pd
 
 
 def chunks(lst, n):
@@ -29,7 +29,7 @@ class NSGAII:
         if self.parallel == "dask":
 
             from dask.distributed import Client,as_completed,LocalCluster
-            cluster = LocalCluster(n_workers=2,threads_per_worker=1,dashboard_address= ":0")
+            cluster = LocalCluster(n_workers=4,threads_per_worker=1,dashboard_address= ":0")
             self.client = Client(cluster)
             self.n_workers = len(self.client.nthreads())
             print(self.client.scheduler_info()['services'])
@@ -137,11 +137,13 @@ class NSGAII:
 
                     # no need to evaluate again the parent population (self.pop.pop). Although also in the
                     # offsprings there are likely some duplicates, what to do with those?
-                    QtUnique = Qt[:,:]
+                    Qt_df = pd.DataFrame(Qt)
+
+                    Qt_dup,Qt_nodup = Qt_df[Qt_df.duplicated()].values,Qt_df[~Qt_df.duplicated()].values
 
                     jobs =[]
-                    for j in range(Qt.shape[0]):
-                        jobs.append(self.client.submit(self.problem.evaluate,Qt[j],self.pop.labels))
+                    for j in range(Qt_nodup.shape[0]):
+                        jobs.append(self.client.submit(self.problem.evaluate,Qt_nodup[j],self.pop.labels))
                     res = [job.result() for job in jobs]
 
                     # the vic problem return a list with 2 objects. The obj function and the simulation time series
@@ -165,7 +167,7 @@ class NSGAII:
                 nonDomRank = fastSort(self.pop.F)
 
                 # crowding distance
-                crDist = np.empty(self.pop.n_pop*2)
+                crDist = np.empty(len(self.pop.F))
                 for rk in range(1,np.max(nonDomRank)+1):
                     crDist[nonDomRank == rk] = crowdDist(self.pop.F[nonDomRank==rk,:])
 

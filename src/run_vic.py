@@ -14,20 +14,19 @@ from mpl_toolkits.mplot3d import Axes3D
 
 if __name__ == "__main__":
 
-    n_obj = 3
-    n_var = 5
     n_pop = 30
-    n_gen= 10
+    n_gen= 15
 
     # TODO: create a parameter parent class. It should have methods and attributes that set the general interface
     # for child classes. For example it should have parameter name, distribution (default is uniform) and arguments
     # passed to the distribution (min,max or average and std for normal distribution). Use distribution from scipy.stats.
     # It should also define the relationships between parameters (constrained)
     params = {"depth2d":[np.random.uniform,0.1,1],
-              "depth3d":[np.random.uniform,0.5,3],
+              "depth3d":[np.random.uniform,0.1,4],
               "Dsmax1d":[np.random.uniform,1,30],
-              "Ksat2d":[np.random.uniform,100,1000],
-              "Ksat3d":[np.random.uniform,100,1000]}
+              "infilt1d":[np.random.uniform,0.0001,0.4],
+              "expt2d":[np.random.randint,5,30],
+              "Ksat2d":[np.random.randint,100,1000]}
 
 
 

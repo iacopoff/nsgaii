@@ -32,11 +32,12 @@ if __name__ == "__main__":
 
     parentDir = config["parentDir"]
     calName = config["calOutName"]
+    print(calName)
 
     df = pd.read_csv(parentDir + "/" + calName + ".csv" )
-
+    n_pop = 20
     df = df.iloc[:,2:7]
-    gen =np.repeat(range(1,11),30)
+    gen =np.repeat(range(1,11),n_pop)[:198]
     df["gen"] = gen
 
 
@@ -44,13 +45,13 @@ if __name__ == "__main__":
     #plt.show()
     # n of duplicates per generation
     dup = []
-    for i in range(30,(30*11),30):
+    for i in range(n_pop,(n_pop*11),n_pop):
         #df1  = df[df["gen"]==i]
         df1 = df.iloc[:i,:]
         dup.append(df1[df1.drop("gen",axis=1).duplicated() ].count())
 
     dfdup = pd.concat(dup,axis=1)
-    to = 300
+    to = 200
     ax = df.iloc[:to].drop("gen",axis=1).plot(style=".",color="black")
     plt.yscale("log")
     df.iloc[:to][df.iloc[:to].drop("gen",axis=1).duplicated()].drop("gen",axis=1).plot(style =".",ax=ax)
