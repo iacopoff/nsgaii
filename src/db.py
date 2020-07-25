@@ -76,6 +76,10 @@ class VicDriverMultiGridcell:
 
         sim = self.simulation_adaptor(sim)
 
+        #import pdb; pdb.set_trace()
+
+        assert len(sim.shape) == 2, f"check simulation dimension, it is {sim.shape}, it should be (n_pop,sim_length)"
+
         with open(self.connection + ".csv",'a') as conn:
             writer = csv.writer(conn,delimiter=',')
             for o,p,s in zip(obj_func,param,sim):

@@ -14,7 +14,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 if __name__ == "__main__":
 
-    n_pop = 30
+    n_pop = 4
     n_gen= 15
 
     # TODO: create a parameter parent class. It should have methods and attributes that set the general interface
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     pop = PopVIC(n_pop = n_pop,
                  params = params)
 
-    
+    # TODO: add option for paralel
     algorithm = NSGAII(
         selection = tournament_selection(pressure=2),
         crossover = crossover(crossProb=0.9),
