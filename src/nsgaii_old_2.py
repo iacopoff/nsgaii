@@ -2,7 +2,7 @@
 import numpy as np
 from numpy.random import random,randint,uniform,permutation
 from utils import fastSort,crowdDist
-from db_refactor import Database,VicDriverMultiGridcell
+from db import MultiGridWriter
 import pandas as pd
 
 
@@ -85,19 +85,18 @@ class NSGAII:
 
 
                  # init db and write first population
+                self.db = MultiGridWriter(obj=self.pop.F,
+                                          params=self.pop.pop,
+                                          param_labels =self.pop.labels,
+                                          sim=self.sim,
+                                          gridcells=self.problem.savedgridID,
+                                          connection=self.problem.config.parentDir + "/" + self.problem.config.calOutName)
 
-                if self.save_history:
-                    self.db = Database(
-                        driver = VicDriverMultiGridcell(gridcells=self.problem.savedgridID),
-                        obj_function=self.pop.F,
-                        param=self.pop.pop,
-                        param_labels =self.pop.labels,
-                        simulation=self.sim,
-                        connection=self.problem.config.parentDir + "/" + self.problem.config.calOutName)
 
-                    self.db.init()
-
-                    self.db.write()
+                self.db.init_db()
+                self.db.write(obj=self.pop.F,
+                              params=self.pop.pop,
+                              sim=self.sim)
 
                 self.problem.clean_simulation()
 
@@ -183,8 +182,9 @@ class NSGAII:
                 if self.save_history:
                     self.pop.save(P=Psort,F = self.pop.F)
 
-                if self.save_history:
-                    self.db.write()
+                self.db.write(obj=self.pop.F,
+                              params=self.pop.pop,
+                              sim=self.sim)
 
                 self.problem.clean_simulation()
 
