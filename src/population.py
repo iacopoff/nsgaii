@@ -1,5 +1,7 @@
 import numpy as np
 
+
+# population needs to have: init_population method (create the parameters given distributions and constraints)
 class PopVIC:
     def __init__(self,n_pop,params,F=None,R=None):
         self.n_pop = n_pop

@@ -88,18 +88,16 @@ class NSGAII:
 
                 if self.save_history:
                     self.db = Database(
-                        driver = VicDriverMultiGridcell(gridcells=self.problem.savedgridID),
+                        driver = VicDriverMultiGridcell(gridcells=self.problem.savedgridID,
+                                                        param_lab =self.pop.labels),
                         obj_function=self.pop.F,
                         param=self.pop.pop,
-                        param_labels =self.pop.labels,
                         simulation=self.sim,
                         connection=self.problem.config.parentDir + "/" + self.problem.config.calOutName)
 
                     self.db.init()
 
                     self.db.write()
-
-                self.problem.clean_simulation()
 
 
                 # non-dominance
@@ -186,7 +184,6 @@ class NSGAII:
                 if self.save_history:
                     self.db.write()
 
-                self.problem.clean_simulation()
 
                 # selection
 

@@ -144,7 +144,6 @@ class VIC:
             self.counter = self.counter + 1
 
 
-        
         if self.config.timeStep == "D":
             # daily calibration
             obsSeries = []
@@ -153,12 +152,6 @@ class VIC:
 
             self.savedgridID = self.gridcells.index.values
 
-        ###
-
-        #if self.cal_multi:
-        #    obsSeries = obsSeries[0] + obsSeries[1]
-        #else:
-        #    obsSeries = obsSeries[0]
 
         print("observation length")
         print(len(obsSeries))
@@ -166,35 +159,9 @@ class VIC:
         self.evaluation =  obsSeries
 
 
-    def evaluate(self,x,l):
-
-       
-
-        sim = self.run_simulation(x,l)
-
-        self.store_simulations(sim)
-
-        eva = self.get_evaluation()
-
-        obj = self.objective_functions(sim,eva)
-
-        return [obj,sim]
-
     def get_evaluation(self):
         return self.evaluation
 
-    def store_simulations(self,simulation):
-
-        #simulation = np.row_stack(simulation).flatten()# stack by dataset and then flatten
-
-        self.simulation_storage.append(simulation)
-
-        #Import pdb; pdb.set_trace()
-
-        return
-
-    def clean_simulation(self):
-        self.simulation_storage = []
 
     def run_simulation(self,x,l):
         if self.config.parallel == "seq":
@@ -299,28 +266,6 @@ class VIC:
                 print(f"length daily simulation time series {len(simSeries )}")
 
 
-            #if self.cal_multi:
-            #    simSeries = simSeries[0] + simSeries[1]
-            #else:
-            #    simSeries = simSeries[0]
-
-            #print(simSeries)
-            #os.chdir(self.curdir)
-
-            #remove_tree(self.parall_dir)
-            #rmtree(self.parall_dir, ignore_errors=True)
-            #print("removing folders")
-
-            #print("simulation length")
-            #print(len(simSeries))
-
-
-
-
-
-
-
-
 
             os.chdir(self.config.parentDir)
 
@@ -338,7 +283,6 @@ class VIC:
     def objective_functions(self,simulation,evaluation):
 
         obj = np.array([])
-        #import pdb; pdb.set_trace()
 
         for sim,eva in zip(simulation,evaluation):
             sim = np.mean(np.vstack(sim),axis=0)
@@ -346,7 +290,18 @@ class VIC:
 
             obj = np.append(obj, - kge(sim,eva)[0])
 
-
-        #import pdb; pdb.set_trace()
+            
 
         return obj
+
+
+    def evaluate(self,x,l):
+
+        sim = self.run_simulation(x,l)
+
+        eva = self.get_evaluation()
+
+        obj = self.objective_functions(sim,eva)
+
+        return [obj,sim]
+

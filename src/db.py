@@ -44,8 +44,9 @@ class Database():
 
 class VicDriverMultiGridcell:
 
-    def __init__(self,gridcells):
+    def __init__(self,gridcells,param_lab):
         self.gridcells = gridcells
+        self.param_lab = param_lab
 
 
     def create_header(self,obj_func,param,sim):
@@ -57,9 +58,7 @@ class VicDriverMultiGridcell:
 
         obj_func_lab = [f"obj_{i}" for i in range(obj_func.shape[1])]
 
-        param_lab = [f"par_{i}" for i in range(param.shape[1])]
-
-        return obj_func_lab + param_lab + sim_lab
+        return obj_func_lab + self.param_lab + sim_lab
 
 
 
