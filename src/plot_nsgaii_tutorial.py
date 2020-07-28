@@ -12,7 +12,7 @@ n_var = 5
 n_obj = 3
 
 last = None
-first = 2000
+first = None
 
 # output calibration 
 

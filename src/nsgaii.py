@@ -54,7 +54,7 @@ class NSGAII:
             if igen == 1:
 
                 # initialize population
-                self.pop.init_population()
+                #self.pop.init_population()
 
                 # init evaluation
                 if hasattr(self.problem,'init_evaluation'):

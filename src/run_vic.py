@@ -7,6 +7,7 @@ from evolution import tournament_selection,crossover,polynomial_mutation
 from matplotlib import pyplot as plt
 from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
+from parameter import Param
 
 
 
@@ -21,14 +22,15 @@ if __name__ == "__main__":
     # for child classes. For example it should have parameter name, distribution (default is uniform) and arguments
     # passed to the distribution (min,max or average and std for normal distribution). Use distribution from scipy.stats.
     # It should also define the relationships between parameters (constrained)
-    params = {"depth2d":[np.random.uniform,0.1,1],
-              "depth3d":[np.random.uniform,0.1,4],
-              "Dsmax1d":[np.random.uniform,1,30],
-              "infilt1d":[np.random.uniform,0.0001,0.4],
-              "expt2d":[np.random.randint,5,30],
-              "Ksat2d":[np.random.randint,100,1000]}
 
-
+    params = {"depth2d":{'attrs':['norm',0.5,0.1],'bounds':[0.1,1],'constraint':[]},
+              "depth3d":{'attrs':['norm',1.5,0.5],'bounds':[0.1,3],'constraint':["depth3d > depth2d"]},
+              "Dsmax1d":{'attrs':['uniform',1,30],'bounds':[1,30],'constraint':[]},
+              "Wcr_FRACT2d":{'attrs':['uniform',0.3,0.55],'bounds':[0.3,0.55],'constraint':["Wcr_FRACT2d > Wpwp_FRACT2d"]},
+              "Wpwp_FRACT2d":{'attrs':['uniform',0.2,0.5],'bounds':[0.2,0.5],'constraint':[]},
+              "infilt1d":{'attrs':['uniform',1,30],'bounds':[1,30],'constraint':[]},
+              "Ksat1d":{'attrs':['randint',100,1000],'bounds':[100,1000],'constraint':["Ksat1d > Ksat2d"]},
+              "Ksat2d":{'attrs':['randint',10,500],'bounds':[10,500],'constraint':[]}}
 
     config = read_config("./config.ini")
 

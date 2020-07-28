@@ -1,27 +1,17 @@
 import numpy as np
+from parameter import Param
 
 
 # population needs to have: init_population method (create the parameters given distributions and constraints)
 class PopVIC:
     def __init__(self,n_pop,params,F=None,R=None):
         self.n_pop = n_pop
-        self.params =params
+        self.Params = Param()
         self._F = F
         self.P = []
         self.Ft = []
-
-    def init_population(self):
-        ret = []
-        self.xl= []
-        self.xu = []
-        for par in self.params:
-            func,xl,xu = self.params[par]
-            self.xl.append(xl)
-            self.xu.append(xu)
-            ret.append(func(xl,xu,self.n_pop))
-
-        self.pop = np.column_stack(ret)
-        self.labels = list(self.params.keys())
+        self.pop,self.xl,self.xu = self.Params.set_constraint(par=params,n_pop=n_pop)
+        self.labels = list(params.keys())
 
     @property
     def F(self):
