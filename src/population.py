@@ -2,27 +2,6 @@ import numpy as np
 from parameter import Param
 
 
-
-
-
-
-# population needs to have: init_population method (create the parameters given distributions and constraints)
-class PopVIC(Pop):
-    def __init__(self,n_pop,params,F=None,R=None):
-        self.n_pop = n_pop
-        self.Params = Param()
-        self._F = F
-        self.P = []
-        self.Ft = []
-        self.pop,self.xl,self.xu = self.Params.set_constraint(par=params,n_pop=n_pop)
-        self.labels = list(params.keys())
-
-
-
-
-
-
-
 class Pop:
     def __init__(self,n_pop,n_var,F=None,R=None):
         self.n_pop = n_pop
@@ -62,3 +41,15 @@ class Pop:
         txt = " === \nPop shape: {} \nObj functions shape: {} \nRanks shape: {} \n ===".format(self.pop.shape,self.F.shape,self.R.shape)
         return txt
 
+
+
+# population needs to have: init_population method (create the parameters given distributions and constraints)
+class PopVIC(Pop):
+    def __init__(self,n_pop,params,F=None,R=None):
+        self.n_pop = n_pop
+        self.Params = Param()
+        self._F = F
+        self.P = []
+        self.Ft = []
+        self.pop,self.xl,self.xu = self.Params.set_constraint(par=params,n_pop=n_pop)
+        self.labels = list(params.keys())

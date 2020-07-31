@@ -4,7 +4,6 @@ from numpy.random import random,randint,uniform,permutation
 from utils import fastSort,crowdDist
 from db import Database,VicDriverMultiGridcell
 import pandas as pd
-from algorithm import GeneticAlgorithm
 
 
 def chunks(lst, n):
@@ -12,14 +11,37 @@ def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n,:]
 
-class NSGAII(GeneticAlgorithm):
+class NSGAII:
     """
 
     """
 
-    def __init__(self,selection,crossover,mutation,save_history,parallel,cbs):
-        
-        super().__init__(selection,crossover,mutation,save_history,parallel,cbs)
+    def __init__(self,selection,crossover,mutation,save_history=False,parallel=False):
+
+        self.selection   = selection
+        self.crossover   = crossover
+        self.mutation    = mutation
+        self.save_history = save_history
+        self.parallel = parallel
+
+        # TODO: instead of calling self.problem.config.whatever, create a self.config = self.problem.config
+
+        if self.parallel == "dask":
+
+            from dask.distributed import Client,as_completed,LocalCluster
+            cluster = LocalCluster(n_workers=2,threads_per_worker=1,dashboard_address= ":0")
+            self.client = Client(cluster)
+            self.n_workers = len(self.client.nthreads())
+            print(self.client.scheduler_info()['services'])
+            print(self.client.dashboard_link)
+
+
+    def init_pop(self,pop):
+        self.pop = pop
+
+    def init_problem(self,problem,n_gen):
+        self.problem = problem
+        self.n_gen  = n_gen
 
 
     def _evolve(self):
@@ -96,13 +118,9 @@ class NSGAII(GeneticAlgorithm):
 
                 Qt = self.crossover.calc(pop =Qt,n_var = self.problem.config.n_var)
 
-                
-
                 # mutation
 
                 Qt = self.mutation.calc(x = Qt,xl = self.pop.xl,xu = self.pop.xu)
-
-                if self("after_mutation"): return
 
             else:
 

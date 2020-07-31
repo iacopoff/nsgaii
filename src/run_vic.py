@@ -6,6 +6,7 @@ from optimize import minimize
 from evolution import tournament_selection,crossover,polynomial_mutation
 from parameter import Param
 from visualization import quickplot
+from callbacks import PrintMutation
 
 
 
@@ -35,13 +36,17 @@ if __name__ == "__main__":
     pop = PopVIC(n_pop = n_pop,
                  params = params)
 
+
+
+
     # TODO: add option for paralel
     algorithm = NSGAII(
         selection = tournament_selection(pressure=2),
         crossover = crossover(crossProb=0.9),
         mutation = polynomial_mutation(prob_mut=0.3,eta_mut = 30),
         save_history =True,
-        parallel="dask") 
+        parallel="dask",
+        cbs = [PrintMutation()])
 
     result = minimize(problem=problem,
                       algorithm=algorithm,
