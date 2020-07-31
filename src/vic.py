@@ -280,7 +280,7 @@ class VIC:
 
 
 
-    def objective_functions(self,simulation,evaluation):
+    def return_objective_functions(self,simulation,evaluation):
 
         obj = np.array([])
 
@@ -301,7 +301,7 @@ class VIC:
 
         eva = self.get_evaluation()
 
-        obj = self.objective_functions(sim,eva)
+        obj = self.return_objective_functions(sim,eva)
 
         return [obj,sim]
 

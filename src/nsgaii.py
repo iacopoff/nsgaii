@@ -63,12 +63,7 @@ class NSGAII:
                 # evaluate population
                 if self.parallel == "dask":
 
-                    # TODO: when the evaluation function is quite cheap, and it works with matrix operations
-                    # on the population matrix it may be useful to use threading module or asynchio.
-                    #pop_chunks = list(chunks(self.pop.pop,int(self.pop.n_pop/self.n_workers)))
-                    #fut = [self.client.submit(self.problem.evaluate,p) for p in pop_chunks]
 
-                    # for heavy evaluation functions (such as hydrological model) using multiprocessing with dask
                     jobs =[]
                     for j in range(self.pop.n_pop):
                         jobs.append(self.client.submit(self.problem.evaluate,self.pop.pop[j],self.pop.labels))
@@ -87,6 +82,7 @@ class NSGAII:
                  # init db and write first population
 
                 if self.save_history:
+                    
                     self.db = Database(
                         driver = VicDriverMultiGridcell(gridcells=self.problem.savedgridID,
                                                         param_lab =self.pop.labels),
@@ -180,9 +176,9 @@ class NSGAII:
                 # save
                 if self.save_history:
                     self.pop.save(P=Psort,F = self.pop.F)
-
-                if self.save_history:
                     self.db.write()
+
+                    
 
 
                 # selection

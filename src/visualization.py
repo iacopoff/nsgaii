@@ -5,7 +5,9 @@ sys.path = ["/home/iff/research/dev/nsgaii/vic"] + sys.path
 
 from cal_spotpy_functions import _parseConfig,_readFromFile
 import pandas as pd
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
+from matplotlib import cm
+from mpl_toolkits.mplot3d import Axes3D
 
 
 
@@ -19,11 +21,55 @@ def read_config(configFile):
 
 
 
+def quickplot(result,direction="maximise",obj_function_label = None ,figsize=(20,15)):
+    
+    if direction == "maximise":
+        Ft = -np.vstack(result.Ft)    
+        F_pareto = -result.F
+    elif direction == "minimise":
+        Ft = np.vstack(result.Ft)  
+        F_pareto = result.F
+
+    # plot obj functions
+    fig,ax = plt.subplots(Ft.shape[1],1,sharex = True,figsize=figsize)
+    for i in range(result.F.shape[1]):
+        ax[i].plot(Ft[:,i],linewidth=1,alpha=0.8)
+
+
+    Pt = np.vstack(result.P)
+    # plot parameters
+    fig,ax = plt.subplots(Pt.shape[1],1,sharex=True,figsize=(20,10))
+    for i in range(Pt.shape[1]):
+        ax[i].plot(Pt[:,i],linewidth=1)
+        ax[i].set_title(result.labels[i])
+ 
+
+    fig = plt.figure()
+    if Ft.shape[1] < 3:    
+        ax = fig.add_subplot(111)
+        x,y = Ft[:,0],Ft[:,1]
+        x_pareto,y_pareto = F_pareto[:,0],F_pareto[:,1]
+        ax.scatter(x_pareto,y_pareto,color="red")
+        ax.scatter(x,y)
+        ax.set_xlabel(obj_function_label[0])
+        ax.set_ylabel(obj_function_label[1])
+
+    else:
+        ax = fig.add_subplot(111, projection='3d')
+        x,y,z = Ft[:,0],Ft[:,1],Ft[:,2]
+        x_pareto,y_pareto,z_pareto = F_pareto[:,0],F_pareto[:,1],F_pareto[:,2]
+        ax.scatter(x_pareto,y_pareto,z_pareto,color="red")
+        ax.scatter(x,y,z)
+        ax.set_xlabel(obj_function_label[0])
+        ax.set_ylabel(obj_function_label[1])
+        ax.set_zlabel(obj_function_label[2])
+
+    
+    plt.show()
 
 
 
-
-
+ 
 
 
 if __name__ == "__main__":
@@ -91,4 +137,6 @@ if __name__ == "__main__":
    
 
     import pdb; pdb.set_trace()
+
+    #import pdb; pdb.set_trace()
 

@@ -4,7 +4,7 @@ import copy
 
 
 X = np.random.random((20,3))
-X
+
 ret = copy.deepcopy(X)
 
 
@@ -27,7 +27,7 @@ xu = np.repeat(xu[None,:],X.shape[0],axis=0)[do_mutation]
 X = X[do_mutation]
 
 delta1 = (X - xl) / (xu - xl)
-delta2 = (xu - X) / (xu -xl)
+delta2 = (xu - X) / (xu - xl)
 
 mut_pow = 1.0/(eta_mut + 1.0)
 
@@ -56,6 +56,6 @@ _Y[_Y < xl] = xl[_Y < xl]
 _Y[_Y > xu] = xu[_Y > xu]
 
 Y[do_mutation] = _Y
-
+import pdb;pdb.set_trace()
 print(Y)
 print(ret)
