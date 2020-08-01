@@ -17,9 +17,9 @@ class NSGAII(GeneticAlgorithm):
 
     """
 
-    def __init__(self,selection,crossover,mutation,save_history,parallel,cbs):
+    def __init__(self,**kwargs):
         
-        super().__init__(selection,crossover,mutation,save_history,parallel,cbs)
+        super().__init__(**kwargs)
 
 
     def _evolve(self):

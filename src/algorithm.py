@@ -20,9 +20,9 @@ class Algorithm:
 
 class GeneticAlgorithm(Algorithm):
 
-    def __init__(self,selection,crossover,mutation,save_history=True, parallel = False,cbs=None):
+    def __init__(self,selection,crossover,mutation,save_history=True, parallel = False,**kwargs):
 
-        super().__init__(cbs)
+        super().__init__(**kwargs)
 
         self.selection   = selection
         self.crossover   = crossover
