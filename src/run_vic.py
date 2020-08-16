@@ -7,14 +7,14 @@ from evolution import tournament_selection,crossover,polynomial_mutation
 from parameter import Param
 from visualization import quickplot
 from callbacks import PrintMutation
-
+from dashboard import RecordEvolution
 
 
 
 
 if __name__ == "__main__":
 
-    n_pop = 4
+    n_pop = 2
     n_gen= 15
 
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         mutation = polynomial_mutation(prob_mut=0.3,eta_mut = 30),
         save_history =True,
         parallel="dask",
-        cbs = [PrintMutation()])
+        cbs = [RecordEvolution()])
 
     result = minimize(problem=problem,
                       algorithm=algorithm,

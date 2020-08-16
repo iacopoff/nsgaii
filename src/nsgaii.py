@@ -176,3 +176,6 @@ class NSGAII(GeneticAlgorithm):
                 # mutation
 
                 Qt = self.mutation.calc(x = Qt,xl = self.pop.xl,xu =self.pop.xu)
+
+
+                if self("after_mutation"): return
