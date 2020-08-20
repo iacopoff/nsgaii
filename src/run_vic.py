@@ -14,7 +14,7 @@ from dashboard import RecordEvolution
 
 if __name__ == "__main__":
 
-    n_pop = 2
+    n_pop = 20
     n_gen= 15
 
 

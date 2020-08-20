@@ -19,11 +19,6 @@ app.config['DEBUG'] = True
 #turn the flask app into a socketio app
 socketio = SocketIO(app, async_mode=None, logger=True, engineio_logger=True)
 
-#random number Generator Thread
-# thread = Thread()
-# thread_stop_event = Event()
-
-
 
 #@staticmethod
 @app.route('/')
@@ -31,51 +26,18 @@ def index():
     #only by sending this page first will the client be connected to the socketio instance
     return render_template('index.html')
 
-# @socketio.on('connect', namespace='/test')
-# def test_connect():
-    
-#     global thread
-#     global passaround
-
-#     print('Client connected')
-#     #socketio.emit('newnumber', {'number': passaround}, namespace='/test')
-#     #Start the random number generator thread only if the thread has not been started before.
-#     # if not thread.isAlive():
-#     #     print("Starting Thread")
-#     #     thread = socketio.start_background_task(after_mutation)
 
 
 
 @socketio.on('my message',namespace="/test")
 def handle_message(message):
 
-    print("from client")
-    msg = message.decode()
-    print(msg)
-    #global passaround
-    #global thread
+    print(f"message from dashboard {message}")
     
-    array = np.fromstring(msg,np.float32)
-    #if not thread.isAlive():
-    #    print("Starting Thread")
-    #     thread = socketio.start_background_task(after_mutation)
-    socketio.emit('newnumber', {'number': array}, namespace='/test')
+    send = message
 
+    socketio.emit('newnumber', send, namespace='/test')
 
-
-
-# def after_mutation():
-
-#     global passaround
-
-#     while not thread_stop_event.isSet() and passaround:
-
-#         print(passaround)
-
-#         if passaround == "stop":
-#             pass
-#         else:
-#             socketio.emit('newnumber', {'number': passaround}, namespace='/test')
 
 
 class Dashboard:
@@ -83,8 +45,7 @@ class Dashboard:
     def __init__(self):
         self.app = app
         self.socketio = socketio
-        # self.thread = thread
-        # self.thread_stop_event = thread_stop_event
+
 
 
 

@@ -36,7 +36,7 @@ class GeneticAlgorithm(Algorithm):
         if self.parallel == "dask":
 
             from dask.distributed import Client,as_completed,LocalCluster
-            cluster = LocalCluster(n_workers=2,threads_per_worker=1,dashboard_address= ":0")
+            cluster = LocalCluster(n_workers=4,threads_per_worker=1,dashboard_address= ":0")
             self.client = Client(cluster)
             self.n_workers = len(self.client.nthreads())
             print(self.client.scheduler_info()['services'])

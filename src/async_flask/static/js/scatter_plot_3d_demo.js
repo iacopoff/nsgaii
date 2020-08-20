@@ -1,5 +1,17 @@
 // Create a 3d scatter plot within d3 selection parent.
-function scatterPlot3d( parent )
+
+//https://bl.ocks.org/aleereza/d2be3d62a09360a770b79f4e5527eea8
+// https://bl.ocks.org/EfratVil/d956f19f2e56a05c31fb6583beccfda7
+//https://www.d3-graph-gallery.com/graph/interactivity_zoom.html
+//https://wattenberger.com/blog/d3#grabbing-data
+//https://datavizproject.com/
+//https://observablehq.com/@info474/javascript-data-wrangling?collection=@info474/tutorials
+//https://datavizcatalogue.com/
+//https://wattenberger.com/blog/d3-interactive-charts
+//https://flowingdata.com/
+//https://idl.cs.washington.edu/papers/responsive-vis
+
+function scatterPlot3d(parent,data)
 {
   var x3d = parent  
     .append("x3d")
@@ -260,4 +272,75 @@ function scatterPlot3d( parent )
   initializeDataGrid();
   initializePlot();
   setInterval( updateData, defaultDuration );
+}
+
+
+function scatterPlot2d(parent,data)
+{
+
+  var svg = parent.append("svg")
+  .attr('width', 500)
+  .attr('height', 600)
+var colors = d3.scaleSequential().domain([1,10])
+  .interpolator(d3.interpolateTurbo);
+
+var width = 500;
+var height = 600;
+var margin = {'left':50,'right':50,'bottom':50,'top':50}
+
+  var xScale = d3.scaleLinear(
+  d3.extent([0,1]), //store, d => d.obj1 ),
+  [ margin.left, width - margin.right ]
+)
+  var yScale = d3.scaleLinear(
+  d3.extent([0,1]),
+  [ height - margin.bottom, margin.top ]
+)
+  
+  var xAxis = d3.axisBottom(xScale)
+  
+  var yAxis = d3.axisLeft(yScale)
+  //var store = Array()
+
+    //store.push(...generateData(store,100-i*5,i))
+    
+    
+  const g = svg
+          .append('g')
+           .style('font-family', 'sans-serif')
+          .style('font-size', 10)
+  
+  g.selectAll('g')
+      .data(data)
+      // each data point is a group
+      .join('g')
+      .attr('class', 'scatter-point')
+      .attr('transform', d => `translate(${xScale(d.obj1)},${yScale(d.obj2)})`)
+    // .call() passes in the current d3 selection
+    // This is great if we want to append something
+    // but still want to work with the original selection after that
+      .call(g => g
+      // first we append a circle to our data point
+      .append('circle')
+        .attr('r', 5)
+        .style('stroke', d => colors( d.gen ))
+        .style('stroke-width', 2)
+        .style('fill', d => colors( d.gen ))
+           )
+    
+        svg
+    .append('g')
+      .attr('class', 'y-axis')
+      .attr('transform', `translate(${ margin.left },0)`)
+    .call(yAxis)
+      // remove the line between the ticks and the chart
+      .select('.domain').remove()
+  
+  svg
+    .append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', `translate(0,${ height - margin.bottom })`)
+    .call(xAxis)
+      // remove the line between the ticks and the chart
+      .select('.domain').remove()
 }
