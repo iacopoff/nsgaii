@@ -7,9 +7,16 @@ from threading import Thread, Event
 import numpy as np
 
 class CallBack:
+    
+    """
+
+    Base class to build callbacks.
+
+    
+    """
     _order=0
     
-    def set_algorithm(self, alg): self.alg=alg
+    def set_algorithm(self, alg): self.alg = alg
     
     @property
     def name(self):

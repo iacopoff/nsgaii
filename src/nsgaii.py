@@ -102,7 +102,7 @@ class NSGAII(GeneticAlgorithm):
 
                 Qt = self.mutation.calc(x = Qt,xl = self.pop.xl,xu = self.pop.xu)
 
-                if self("after_mutation"): return
+                if self("after_evolution"): return
 
             else:
 
@@ -178,4 +178,4 @@ class NSGAII(GeneticAlgorithm):
                 Qt = self.mutation.calc(x = Qt,xl = self.pop.xl,xu =self.pop.xu)
 
 
-                if self("after_mutation"): return
+                if self("after_evolution"): return

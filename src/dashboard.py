@@ -10,13 +10,31 @@ import time
 import json
 
 class RecordEvolution(CallBack):
+    """ Allows to send any data to a web application for live visualization.
+
+    Methods can be added that mirror calls in the algorithm class
+
+    Attributes
+    ----------
+    alg.problem.config.evalVar : list of str
+        List of objective functions' label names
     
+    alg.pop.F : ndarray
+        Numpy ndarray containing the objective functions from the evolution algorithm
+
+    Methods
+    -------
+    after_evolution
+        Establish a connection with the server application and send data to namespace /test
+
+    Example
+    ----
+
+    """    
     def __init__(self):
         self._generation_count = 1
 
-    def after_mutation(self):
-
-        print("sending to server!")
+    def after_evolution(self):
 
         sio = socketio.Client()
 
@@ -33,7 +51,7 @@ class RecordEvolution(CallBack):
         #  The elements of the tuple will be passed as multiple arguments to the server-side event handler function
         sio.emit('my message', payload ,"/test")
 
-        time.sleep(0.1)
+        time.sleep(0.1) # allows to disconnect without troubles
 
         self._generation_count += 1
 

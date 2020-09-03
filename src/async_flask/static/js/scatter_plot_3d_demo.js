@@ -321,9 +321,9 @@ function scatterPlot2d(parent,data)
       .join('circle')
       .attr('class', 'scatter-point')
       .attr('transform', d => `translate(${xScale(d.obj1)},${yScale(d.obj2)})`)
-        .attr('r', 5)
+        .attr('r', 1)
         .style('stroke', "black") //d => colors( d.gen ))
-        .style('stroke-width', 2)
+        .style('stroke-width', 1)
         .style('fill', "black") //d => colors( d.gen ))
            
   svg
@@ -381,9 +381,9 @@ var margin = {'left':50,'right':50,'bottom':50,'top':50}
             //.attr('transform', d => `translate(${xScale(d.obj1)},${yScale(d.obj2)})`)
             .attr("cx",d => xScale(d.obj1))
             .attr("cy",d => yScale(d.obj2))
-            .attr('r', 5)
+            .attr('r', 1)
             .style('stroke',"red" )// d => colors( d.gen ))
-            .style('stroke-width', 2)
+            .style('stroke-width', 1)
             .style('fill', "red" )//d => colors( d.gen ))
           )
 
