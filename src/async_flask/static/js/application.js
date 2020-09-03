@@ -3,10 +3,21 @@ $(document).ready(function(){
     //connect to the socket server.
     var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
     var datastore = Array(); // maybe create an object that reference generation number
-    //var newdata;
+   
 
+    var counter = 1
 
-
+    // set the zooming
+    var zoom = d3.zoom()
+    .translateExtent([[ 0, 0 ],[ 800, 500 ]])
+    .scaleExtent([ 1, 20 ])
+    .on('zoom', (d,i) => {
+    
+      d3.select( "svg" )
+        .select('.plot-container')
+        .attr('transform', d3.event.transform)
+    
+    })
 
 
     //receive details from server
@@ -14,7 +25,7 @@ $(document).ready(function(){
 
         var received = JSON.parse(msg)
 
-        var obj_func_names =Object.keys(received)// ["obj1","obj2"]//Object.keys(received).pop("gen")
+        var obj_func_names =["obj1","obj2"]//Object.keys(received)// 
         
         
 
@@ -22,17 +33,25 @@ $(document).ready(function(){
 
         datastore.push(...newdata)
 
-        console.log(newdata)
-        console.log(datastore)
-        console.log(received)
+
+        if (counter == 1) {
+
+        scatterPlot2d(d3.select('#divPlot'),datastore,zoom)
+        counter = counter + 1
+
+        } else {
+
+        console.log("updating")
+        updateScatterPlot2d(datastore)
 
 
-        scatterPlot2d(d3.select('#divPlot'),datastore)
-        
+        }
+
+        //zoom
+        d3.select("svg")
+        .select('.plot-container')
+        .call( zoom )
 
     });
 
-    
-    
-    //scatterPlot3d( d3.select('#divPlot'));
 });

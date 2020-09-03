@@ -11,6 +11,13 @@
 //https://flowingdata.com/
 //https://idl.cs.washington.edu/papers/responsive-vis
 
+
+// ZOOMING:
+//http://bl.ocks.org/peterssonjonas/4a0e7cb8d23231243e0e
+
+
+
+
 function scatterPlot3d(parent,data)
 {
   var x3d = parent  
@@ -275,18 +282,22 @@ function scatterPlot3d(parent,data)
 }
 
 
+
 function scatterPlot2d(parent,data)
 {
 
   var svg = parent.append("svg")
   .attr('width', 500)
   .attr('height', 600)
-var colors = d3.scaleSequential().domain([1,10])
-  .interpolator(d3.interpolateTurbo);
 
-var width = 500;
-var height = 600;
-var margin = {'left':50,'right':50,'bottom':50,'top':50}
+
+// var colors = d3.scaleSequential().domain([1,10])
+//   .interpolator(d3.interpolateTurbo);
+
+  var width = 500;
+  var height = 600;
+  var margin = {'left':50,'right':50,'bottom':50,'top':50}
+
 
   var xScale = d3.scaleLinear(
   d3.extent([0,1]), //store, d => d.obj1 ),
@@ -300,35 +311,22 @@ var margin = {'left':50,'right':50,'bottom':50,'top':50}
   var xAxis = d3.axisBottom(xScale)
   
   var yAxis = d3.axisLeft(yScale)
-  //var store = Array()
 
-    //store.push(...generateData(store,100-i*5,i))
-    
-    
-  const g = svg
-          .append('g')
-           .style('font-family', 'sans-serif')
-          .style('font-size', 10)
+  var g = svg.append('g')
+            .attr('class', 'plot-container')
   
-  g.selectAll('g')
+  g.selectAll('circle')
       .data(data)
       // each data point is a group
-      .join('g')
+      .join('circle')
       .attr('class', 'scatter-point')
       .attr('transform', d => `translate(${xScale(d.obj1)},${yScale(d.obj2)})`)
-    // .call() passes in the current d3 selection
-    // This is great if we want to append something
-    // but still want to work with the original selection after that
-      .call(g => g
-      // first we append a circle to our data point
-      .append('circle')
         .attr('r', 5)
-        .style('stroke', d => colors( d.gen ))
+        .style('stroke', "black") //d => colors( d.gen ))
         .style('stroke-width', 2)
-        .style('fill', d => colors( d.gen ))
-           )
-    
-        svg
+        .style('fill', "black") //d => colors( d.gen ))
+           
+  svg
     .append('g')
       .attr('class', 'y-axis')
       .attr('transform', `translate(${ margin.left },0)`)
@@ -343,4 +341,56 @@ var margin = {'left':50,'right':50,'bottom':50,'top':50}
     .call(xAxis)
       // remove the line between the ticks and the chart
       .select('.domain').remove()
+
+
+}
+
+
+
+
+function updateScatterPlot2d(data)
+{
+
+  var g = d3.select("svg").select("g")
+
+  var colors = d3.scaleSequential().domain([1,10])
+  .interpolator(d3.interpolateTurbo);
+
+var width = 500;
+var height = 600;
+var margin = {'left':50,'right':50,'bottom':50,'top':50}
+
+  var xScale = d3.scaleLinear(
+    d3.extent([0,1]), //store, d => d.obj1 ),
+    [ margin.left, width - margin.right ]
+  )
+    var yScale = d3.scaleLinear(
+    d3.extent([0,1]),
+    [ height - margin.bottom, margin.top ]
+  )
+
+  var t = d3.transition().duration(1000).ease(d3.easeLinear);
+
+  g.selectAll("circle")
+      .data(data)
+      .join(
+          enter => enter
+          .append('circle')
+          .call(circle => circle
+          .transition(t)
+            //.attr('transform', d => `translate(${xScale(d.obj1)},${yScale(d.obj2)})`)
+            .attr("cx",d => xScale(d.obj1))
+            .attr("cy",d => yScale(d.obj2))
+            .attr('r', 5)
+            .style('stroke',"red" )// d => colors( d.gen ))
+            .style('stroke-width', 2)
+            .style('fill', "red" )//d => colors( d.gen ))
+          )
+
+          ,
+
+          update => update.style("fill","black").style('stroke',"black" )
+            
+          )
+
 }
