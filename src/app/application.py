@@ -9,9 +9,9 @@ import numpy as np
 
 
 
-app = Flask("/home/iff/research/dev/nsgaii/src/async_flask/application")
-app.instance_path = "/home/iff/research/dev/nsgaii/src/async_flask"
-app.root_path = "/home/iff/research/dev/nsgaii/src/async_flask"
+app = Flask("/home/iff/research/dev/nsgaii/src/app/application")
+app.instance_path = "/home/iff/research/dev/nsgaii/src/app"
+app.root_path = "/home/iff/research/dev/nsgaii/src/app"
 
 app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = True
@@ -29,14 +29,14 @@ def index():
 
 
 
-@socketio.on('my message',namespace="/test")
+@socketio.on('message',namespace="/conn")
 def handle_message(message):
 
     print(f"message from dashboard {message}")
     
     send = message
 
-    socketio.emit('newnumber', send, namespace='/test')
+    socketio.emit('tofrontend', send, namespace='/conn')
 
 
 

@@ -4,7 +4,7 @@ from numpy.random import random,randint,uniform,permutation
 from utils import fastSort,crowdDist
 from db import Database,VicDriverMultiGridcell
 import pandas as pd
-from algorithm import GeneticAlgorithm
+from alg.algorithm import GeneticAlgorithm
 
 
 def chunks(lst, n):

@@ -1,7 +1,7 @@
 
 $(document).ready(function(){
     //connect to the socket server.
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/conn');
     var datastore = Array(); // maybe create an object that reference generation number
    
 
@@ -21,7 +21,7 @@ $(document).ready(function(){
 
 
     //receive details from server
-    socket.on('newnumber', function(msg) {
+    socket.on('tofrontend', function(msg) {
 
         var received = JSON.parse(msg)
 

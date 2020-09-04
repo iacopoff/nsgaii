@@ -1,7 +1,7 @@
 import numpy as np
-from nsgaii import NSGAII
+from alg.nsgaii import NSGAII
 from population import Pop
-from dtlz1 import DTLZ1
+from problem.dtlz1 import DTLZ1
 from optimize import minimize
 from evolution import tournament_selection,crossover,polynomial_mutation
 from matplotlib import pyplot as plt
