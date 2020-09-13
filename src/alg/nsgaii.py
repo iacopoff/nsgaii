@@ -14,7 +14,21 @@ def chunks(lst, n):
 
 class NSGAII(GeneticAlgorithm):
     """
+    NSGA-II algorithm,  Deb et al. (2002).  
+    
 
+    Methods
+    -------
+
+    _evolve:
+        Starts and runs the evolution loop for a number of generations. 
+
+    References
+    ----------
+    
+    .. [1] Deb et al. 2002. A fast and elitist multiobjective genetic algorithm: NSGA-II. Kalyanmoy Deb, Associate Member, IEEE, Amrit Pratap, Sameer Agarwal, and T. Meyarivan
+    
+    
     """
 
     def __init__(self,**kwargs):
@@ -28,11 +42,7 @@ class NSGAII(GeneticAlgorithm):
 
             print(f"Generation n: {igen}")
 
-            # initialisation
             if igen == 1:
-
-                # initialize population
-                #self.pop.init_population()
 
                 # init evaluation
                 if hasattr(self.problem,'init_evaluation'):
@@ -40,7 +50,6 @@ class NSGAII(GeneticAlgorithm):
 
                 # evaluate population
                 if self.parallel == "dask":
-
 
                     jobs =[]
                     for j in range(self.pop.n_pop):
@@ -59,20 +68,24 @@ class NSGAII(GeneticAlgorithm):
 
                  # init db and write first population
 
-                if self.save_history:
+                if self.save_history == 'both' or self.save_history == 'db':
 
                     self.db = Database(
-                        driver = VicDriverMultiGridcell(gridcells=self.problem.savedgridID,
-                                                        param_lab =self.pop.labels),
-                        obj_function=self.pop.F,
-                        param=self.pop.pop,
-                        simulation=self.sim,
-                        connection=self.problem.config.parentDir + "/" + self.problem.config.calOutName)
+                                driver = VicDriverMultiGridcell(
+                                                    gridcells=self.problem.savedgridID,
+                                                    param_lab =self.pop.labels
+                                                    ),
+                                obj_function=self.pop.F,
+                                param=self.pop.pop,
+                                simulation=self.sim,
+                                connection=self.problem.config.parentDir + "/" + self.problem.config.calOutName)
 
                     self.db.init()
 
                     self.db.write()
 
+                
+                    
 
                 # non-dominance
                 nonDomRank = fastSort(self.pop.F)
@@ -85,6 +98,9 @@ class NSGAII(GeneticAlgorithm):
                 # sorting
                 self.pop.R =  np.lexsort((-crDist,nonDomRank)) 
                 Psort = self.pop.pop[self.pop.R]
+
+                # save in ram memory
+                if self.save_history == 'ram': self.pop.save(P=Psort,F = self.pop.F)
 
                 # selection
 
@@ -110,7 +126,7 @@ class NSGAII(GeneticAlgorithm):
 
                 Rt = np.vstack([self.pop.pop,Qt])
 
-                if self.parallel == "dask":
+                if self.parallel == 'dask':
 
                     # no need to evaluate again the parent population (self.pop.pop). Although also in the
                     # offsprings there are likely some duplicates, what to do with those?
@@ -156,10 +172,11 @@ class NSGAII(GeneticAlgorithm):
                 self.pop.pop = Psort[:,:]
 
                 # save
-                if self.save_history:
+                if self.save_history == 'both':
                     self.pop.save(P=Psort,F = self.pop.F)
                     self.db.write()
-
+                if self.save_history == 'db': self.db.write()
+                if self.save_history == 'ram': self.pop.save(P=Psort,F = self.pop.F)
                     
 
 

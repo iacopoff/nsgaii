@@ -44,7 +44,7 @@ if __name__ == "__main__":
         selection = tournament_selection(pressure=2),
         crossover = crossover(crossProb=0.9),
         mutation = polynomial_mutation(prob_mut=0.3,eta_mut = 30),
-        save_history =True,
+        save_history ="both",
         parallel="dask",
         cbs = [RecordEvolution()])
 

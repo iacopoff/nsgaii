@@ -1,5 +1,10 @@
 
 class Algorithm:
+    """
+    Base algorithm class.
+
+    Initialise callbacks.
+    """
 
     def __init__(self,cbs=None,**kwargs):
         self.cbs = cbs
@@ -19,8 +24,32 @@ class Algorithm:
 
 
 class GeneticAlgorithm(Algorithm):
+    """
+    Genetic algorithm class.
 
-    def __init__(self,selection,crossover,mutation,save_history=True, parallel = False,**kwargs):
+    Attributes
+    ----------
+    
+    selection :
+    crossover :
+    mutation :
+    save_history : str
+    paralell : bool
+
+    """
+    def __init__(self,selection,crossover,mutation,save_history="both", parallel = False,**kwargs):
+        """
+
+        Parameters
+        -----------
+        selection :
+        crossover :
+        mutation :
+        save_history : str, default "both"
+            The evolving population history can be recorded. Three options are available: 'ram' for RAM memory, 'db' for disk memory (see Database class) or 'both' for both. 
+        paralell : bool, default False
+
+        """
 
         super().__init__(**kwargs)
 

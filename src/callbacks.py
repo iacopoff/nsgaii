@@ -12,6 +12,26 @@ class CallBack:
 
     Base class to build callbacks.
 
+    Attributes
+    ----------
+
+    alg : class 
+        Algorithm class object, allows access to attributes and methods of the class
+
+    name : str
+        Name of the callback
+
+    Example
+    -------
+
+    class PrintMutation(CallBack):
+        
+        def after_mutation(self):
+            
+            print(self.alg.pop.F)
+
+            return
+
     
     """
     _order=0
@@ -24,11 +44,4 @@ class CallBack:
         return name or 'callback'
 
 
-class PrintMutation(CallBack):
-    
-    def after_mutation(self):
-          
-        print(self.alg.pop.F)
-
-        return
 
