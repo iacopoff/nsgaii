@@ -9,14 +9,14 @@ import pandas as pd
 # user config
 
 n_var = 5
-n_obj = 3
+n_obj = 4
 
 last = None
 first = None
 
 # output calibration 
 
-df = pd.read_csv("NSGA2.csv")
+df = pd.read_csv("hymod_output.csv")
 
 if last:
     df = df.iloc[-last:,:]

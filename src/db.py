@@ -42,6 +42,34 @@ class Database():
 
 
 
+
+class HymodDriver:
+
+    def __init__(self,param_lab):
+        self.param_lab = param_lab
+
+
+    def init(self,connection,header):
+
+        self.connection = connection
+
+        with open(connection +".csv",'w') as conn:
+            writer = csv.writer(conn,delimiter=',')
+            writer.writerow(header)
+            conn.flush()
+
+    def write(self,obj_func,param,sim):
+
+        with open(self.connection + ".csv",'a') as conn:
+            writer = csv.writer(conn,delimiter=',')
+            for o,p,s in zip(obj_func,param,sim):
+                writer.writerow(np.concatenate([o,p,s]))
+            conn.flush()
+
+
+
+
+
 class VicDriverMultiGridcell:
 
     def __init__(self,gridcells,param_lab):

@@ -2,7 +2,7 @@
 import numpy as np
 from numpy.random import random,randint,uniform,permutation
 from utils import fastSort,crowdDist
-from db import Database,VicDriverMultiGridcell
+from db import Database,VicDriverMultiGridcell,HymodDriver
 import pandas as pd
 from alg.algorithm import GeneticAlgorithm
 
@@ -63,7 +63,10 @@ class NSGAII(GeneticAlgorithm):
                     jobs =[]
                     for j in range(self.pop.n_pop):
                         jobs.append(self.problem.evaluate(x=self.pop.pop[j],l=self.pop.labels))
-                    self.pop.F = np.vstack(jobs) # n_var and n_obj from problem clas
+
+              
+                    self.pop.F = np.vstack([i[0] for i in jobs]) 
+                    self.sim = [i[1] for i in jobs]
 
 
                  # init db and write first population
@@ -71,21 +74,18 @@ class NSGAII(GeneticAlgorithm):
                 if self.save_history == 'both' or self.save_history == 'db':
 
                     self.db = Database(
-                                driver = VicDriverMultiGridcell(
-                                                    gridcells=self.problem.savedgridID,
-                                                    param_lab =self.pop.labels
-                                                    ),
+                                driver = HymodDriver(param_lab =self.pop.labels), #   VicDriverMultiGridcell(
+                                                    #gridcells=self.problem.savedgridID,
+                                                    #param_lab =self.pop.labels
+                                                    #),
                                 obj_function=self.pop.F,
                                 param=self.pop.pop,
                                 simulation=self.sim,
-                                connection=self.problem.config.parentDir + "/" + self.problem.config.calOutName)
+                                connection=self.problem.config.dataDir + "/" + "output.csv")#self.problem.config.parentDir + "/" + self.problem.config.calOutName)
 
                     self.db.init()
 
                     self.db.write()
-
-                
-                    
 
                 # non-dominance
                 nonDomRank = fastSort(self.pop.F)
@@ -153,8 +153,9 @@ class NSGAII(GeneticAlgorithm):
                     for j in range(Qt.shape[0]):
                         jobs.append(self.problem.evaluate(x=Qt[j],l=self.pop.labels))
 
-                    self.pop.F = np.vstack([self.pop.F,np.vstack(jobs)]) # NO need to recalculate obj function for parent population
-
+                    self.pop.F = np.vstack([self.pop.F,np.vstack([i[0] for i in jobs])]) # NO need to recalculate obj function for parent population
+                    
+                    self.sim = [i[1] for i in jobs]
 
                 # non-dominance
                 nonDomRank = fastSort(self.pop.F)

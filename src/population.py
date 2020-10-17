@@ -89,3 +89,14 @@ class PopVIC(Pop):
         self.Ft = []
         self.pop,self.xl,self.xu = self.Params.set_constraint(par=params,n_pop=n_pop)
         self.labels = list(params.keys())
+
+
+class PopHYMOD(Pop):
+    def __init__(self,n_pop,params,F=None,R=None):
+        self.n_pop = n_pop
+        self.Params = Param()
+        self._F = F
+        self.P = []
+        self.Ft = []
+        self.pop,self.xl,self.xu = self.Params.set_constraint(par=params,n_pop=n_pop)
+        self.labels = list(params.keys())

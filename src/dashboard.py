@@ -42,7 +42,8 @@ class RecordEvolution(CallBack):
         except:
             labels = ["obj1","obj2"]
         
-        data = self.alg.pop.F *-1 # convert to 1 is best
+        data = self.alg.pop.F #*-1 # convert to 1 is best
+
 
         payload = create_json_payload(data,labels,self._generation_count)
 

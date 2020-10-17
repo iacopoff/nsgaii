@@ -2,6 +2,7 @@ import os,sys
 
 sys.path = ["/home/iff/research/dev/nsgaii/vic"] + sys.path
 
+import numpy as np
 
 from cal_spotpy_functions import _parseConfig,_readFromFile
 import pandas as pd
@@ -54,7 +55,7 @@ def quickplot(result,direction="maximise",obj_function_label = None ,figsize=(20
         ax.set_xlabel(obj_function_label[0])
         ax.set_ylabel(obj_function_label[1])
 
-    else:
+    elif Ft.shape[1] == 3:
         ax = fig.add_subplot(111, projection='3d')
         x,y,z = Ft[:,0],Ft[:,1],Ft[:,2]
         x_pareto,y_pareto,z_pareto = F_pareto[:,0],F_pareto[:,1],F_pareto[:,2]
@@ -63,6 +64,16 @@ def quickplot(result,direction="maximise",obj_function_label = None ,figsize=(20
         ax.set_xlabel(obj_function_label[0])
         ax.set_ylabel(obj_function_label[1])
         ax.set_zlabel(obj_function_label[2])
+    elif Ft.shape[1] > 3:
+        ax = fig.add_subplot(111, projection='3d')
+        x,y,z,v = Ft[:,0],Ft[:,1],Ft[:,2],Ft[:,3]
+        x_pareto,y_pareto,z_pareto,v_pareto = F_pareto[:,0],F_pareto[:,1],F_pareto[:,2],F_pareto[:,3]
+        ax.scatter(x_pareto,y_pareto,z_pareto,color="red")
+        ax.scatter(x,y,z,c=v)
+        ax.set_xlabel(obj_function_label[0])
+        ax.set_ylabel(obj_function_label[1])
+        ax.set_zlabel(obj_function_label[2])
+
 
     
     plt.show()
