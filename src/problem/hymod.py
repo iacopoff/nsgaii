@@ -37,12 +37,14 @@ def read_config(configFile):
 
 
 class Config:
-    def __init__(self,parallel,dataDir,modelDir,inputFile,evalVar):
+    def __init__(self,parallel,dataDir,modelDir,inputFile,evalVar,outDir,outputFile):
         self.parallel = parallel
         self.dataDir = dataDir
         self.modelDir = modelDir
         self.inputFile = inputFile  
         self.evalVar = [i for i in evalVar.split(",")]
+        self.outDir = outDir
+        self.outputFile = outputFile
         self.n_var = 2
 
 
@@ -90,17 +92,17 @@ class HYMOD:
             return x
 
 
-        obj = obj[[1,-1]]
+        #obj = obj[[1,-1]]
         # kge
         obj[0] = obj[0] *-1
         # r
-        #obj[1] = obj[1] *-1
+        obj[1] = obj[1] *-1
         #alpha
-        obj[1] = obj[1] * correct(obj[1]) 
+        obj[2] = obj[2] * correct(obj[2]) 
         #beta
-        #obj[3] = obj[3] * correct(obj[3]) 
+        obj[3] = obj[3] * correct(obj[3]) 
 
-        #obj = obj[[1,2,3,0]]
+        obj = obj[[1,2,3,0]]
 
         
 

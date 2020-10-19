@@ -6,14 +6,19 @@ class Algorithm:
     Initialise callbacks.
     """
 
-    def __init__(self,cbs=None,**kwargs):
+    def __init__(self,cbs=None,driver =None,**kwargs):
         self.cbs = cbs
 
+        self.problem = None
+        self.pop = None
+        self.driver = driver
 
         #init callbacks
         if self.cbs is not None: 
             for cb in self.cbs: cb.set_algorithm(self)
 
+    def set_problem(self):
+        self.driver.set(self.problem)
 
     def __call__(self, cb_name):
         for cb in sorted(self.cbs, key=lambda x: x._order):
@@ -65,7 +70,7 @@ class GeneticAlgorithm(Algorithm):
         if self.parallel == "dask":
 
             from dask.distributed import Client,as_completed,LocalCluster
-            cluster = LocalCluster(n_workers=4,threads_per_worker=1,dashboard_address= ":0")
+            cluster = LocalCluster(n_workers=4,threads_per_worker=2,dashboard_address= ":0")
             self.client = Client(cluster)
             self.n_workers = len(self.client.nthreads())
             print(self.client.scheduler_info()['services'])

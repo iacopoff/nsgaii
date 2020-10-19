@@ -1,7 +1,10 @@
 import csv
 import numpy as np
 
-
+def listify(l):
+    if l is None: return None
+    elif isinstance(l,list): return l
+    else: return [l]
 
 
 class Database():
@@ -13,12 +16,11 @@ class Database():
         self.obj_func = obj_function
         self.param = param
         self.sim = simulation
-        self.conn = connection
-
+        self.connection = connection
         self._create_header()
 
     def init(self):
-        self._driver.init(self.conn,self.header)
+        self._driver.init(self.connection,self.header)
 
     def write(self):
         self._driver.write(self.obj_func,self.param,self.sim)
@@ -43,24 +45,35 @@ class Database():
 
 
 
-class HymodDriver:
+class Driver:
+    def __init__(self,attrs):
+        self.attrs = listify(attrs) 
 
-    def __init__(self,param_lab):
+    def set(self,cls):
+        if self.attrs:
+            for attr in self.attrs:
+                if hasattr(cls,attr):
+                    self.__setattr__(attr,vars(cls)[attr])    
+
+
+class HymodDriver(Driver):
+
+    def __init__(self,param_lab,attrs=None):
+        super().__init__(attrs)
         self.param_lab = param_lab
 
 
     def init(self,connection,header):
 
         self.connection = connection
-
-        with open(connection +".csv",'w') as conn:
+        with open(connection,'w') as conn:
             writer = csv.writer(conn,delimiter=',')
             writer.writerow(header)
             conn.flush()
 
     def write(self,obj_func,param,sim):
 
-        with open(self.connection + ".csv",'a') as conn:
+        with open(self.connection,'a') as conn:
             writer = csv.writer(conn,delimiter=',')
             for o,p,s in zip(obj_func,param,sim):
                 writer.writerow(np.concatenate([o,p,s]))
@@ -72,9 +85,10 @@ class HymodDriver:
 
 class VicDriverMultiGridcell:
 
-    def __init__(self,gridcells,param_lab):
+    def __init__(self,gridcells,param_lab,connection):
         self.gridcells = gridcells
         self.param_lab = param_lab
+        self.connection = connection
 
 
     def create_header(self,obj_func,param,sim):
@@ -90,11 +104,9 @@ class VicDriverMultiGridcell:
 
 
 
-    def init(self,connection,header):
+    def init(self,header):
 
-        self.connection = connection
-
-        with open(connection +".csv",'w') as conn:
+        with open(self.connection +".csv",'w') as conn:
             writer = csv.writer(conn,delimiter=',')
             writer.writerow(header)
             conn.flush()

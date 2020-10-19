@@ -8,14 +8,14 @@ from parameter import Param
 from visualization import quickplot
 #from callbacks import PrintMutation
 from dashboard import RecordEvolution
-
+from db import HymodDriver
 
 
 
 if __name__ == "__main__":
 
-    n_pop = 30
-    n_gen= 50
+    n_pop = 50
+    n_gen= 100
 
 
     params = {"cmax":{'attrs':['uniform',1,500],'bounds':[1,500],'constraint':[]},
@@ -32,15 +32,19 @@ if __name__ == "__main__":
 
     pop = PopHYMOD(n_pop = n_pop,
                  params = params)
-
+    
+    hydmo_driver = HymodDriver(
+                    param_lab=list(params.keys())
+                    )
 
     algorithm = NSGAII(
+        driver = hydmo_driver ,
         selection = tournament_selection(pressure=2),
         crossover = crossover(crossProb=0.9),
         mutation = polynomial_mutation(prob_mut=0.3,eta_mut = 30),
         save_history ="both",
-        parallel="seq",
-        cbs = [RecordEvolution()])
+        parallel="dask",
+        cbs = [])
 
     result = minimize(problem=problem,
                       algorithm=algorithm,

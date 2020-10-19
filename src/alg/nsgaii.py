@@ -31,9 +31,9 @@ class NSGAII(GeneticAlgorithm):
     
     """
 
-    def __init__(self,**kwargs):
-        
-        super().__init__(**kwargs)
+    def __init__(self,driver,**kwargs):
+
+        super().__init__(driver=driver,**kwargs)
 
 
     def _evolve(self):
@@ -72,21 +72,23 @@ class NSGAII(GeneticAlgorithm):
                  # init db and write first population
 
                 if self.save_history == 'both' or self.save_history == 'db':
+                    
+                    self.set_problem()
 
                     self.db = Database(
-                                driver = HymodDriver(param_lab =self.pop.labels), #   VicDriverMultiGridcell(
+                                driver = self.driver, #   VicDriverMultiGridcell(
                                                     #gridcells=self.problem.savedgridID,
                                                     #param_lab =self.pop.labels
                                                     #),
                                 obj_function=self.pop.F,
                                 param=self.pop.pop,
                                 simulation=self.sim,
-                                connection=self.problem.config.dataDir + "/" + "output.csv")#self.problem.config.parentDir + "/" + self.problem.config.calOutName)
+                                connection=self.problem.config.outDir + "/" + self.problem.config.outputFile)#self.problem.config.parentDir + "/" + self.problem.config.calOutName)
 
                     self.db.init()
 
                     self.db.write()
-
+                    #import pdb; pdb.set_trace() 
                 # non-dominance
                 nonDomRank = fastSort(self.pop.F)
 
